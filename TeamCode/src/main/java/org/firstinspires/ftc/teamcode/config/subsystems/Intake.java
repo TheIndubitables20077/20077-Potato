@@ -1,19 +1,18 @@
 package org.firstinspires.ftc.teamcode.config.subsystems;
 
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDFController;
-import com.pedropathing.localization.Encoder;
 
 @Configurable
 public class Intake extends SubsystemBase {
     private DcMotorEx i, e;
     private Servo p;
-    private Encoder en;
     private PIDFController pidf;
     private boolean usePIDF = false; // Flag to determine if PIDF control is used
 
@@ -44,23 +43,15 @@ public class Intake extends SubsystemBase {
         i = h.get(DcMotorEx.class, "i");
         p = h.get(Servo.class, "ip");
         e = h.get(DcMotorEx.class, "e");
-        en = new Encoder(h.get(DcMotorEx.class, "e"));
 
         pidf = new PIDFController(kP, kI, kD, kF);
 
-        en.reset();
+        e.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
     public void periodic() {
         super.periodic();
-
-        // Update the PIDF controller with the current encoder value
-        if (usePIDF()) {
-            double currentEncoderValue = en.getDeltaPosition();
-            double output = pidf.calculate(currentEncoderValue);
-            e.setPower(output);
-        }
     }
 
     /**
@@ -119,16 +110,15 @@ public class Intake extends SubsystemBase {
      * @return The current encoder value of the intake motor.
      */
     public double getEncoder() {
-        return en.getDeltaPosition();
+        return e.getCurrentPosition();
     }
 
     public void extend() {
-        usePIDF = true;
-
+//        usePIDF = true;
     }
 
     public void retract() {
-        usePIDF = true;
+//        usePIDF = true;
     }
 
     /**
