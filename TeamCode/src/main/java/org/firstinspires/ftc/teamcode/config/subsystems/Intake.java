@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 import org.firstinspires.ftc.teamcode.config.core.hardware.CachedMotor;
@@ -14,17 +15,22 @@ public class Intake extends SubsystemBase {
     private CachedMotor i, e;
     private Servo p;
     private Motor.Encoder en;
+    private PIDFController pidf;
+    private boolean usePIDF = false; // Flag to determine if PIDF control is used
 
     // Position constants for the intake and transfer for the pivot servo
-    public static final double pTransfer = 1;
-    public static final double pIntake = 0;
-    public static final double pHover = 0.5;
+    public static double pTransfer = 1;
+    public static double pIntake = 0;
+    public static double pHover = 0.5;
 
     // Power constants for the intake motor
-    public static final double mIntake = 1;
-    public static final double mTransfer = -0.5;
+    public static double mIntake = 1;
+    public static double mTransfer = -0.5;
 
-
+    public static double kP = 0.01; // Proportional gain for the PIDF controller
+    public static double kI = 0;    // Integral gain for the PIDF controller
+    public static double kD = 0.0001;    // Derivative gain for the PIDF controller
+    public static double kF = 0.001;    // Feedforward gain for the PIDF controller
 
     /**
      * Constructor for the Intake subsystem.
@@ -40,6 +46,22 @@ public class Intake extends SubsystemBase {
         p = h.get(Servo.class, "ip");
         e = h.get(CachedMotor.class, "e");
         en = h.get(Motor.Encoder.class, "e");
+
+        pidf = new PIDFController(kP, kI, kD, kF);
+
+        en.reset();
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+
+        // Update the PIDF controller with the current encoder value
+        if (usePIDF()) {
+            double currentEncoderValue = en.getDistance();
+            double output = pidf.calculate(currentEncoderValue);
+            e.setPower(output);
+        }
     }
 
     /**
@@ -102,14 +124,32 @@ public class Intake extends SubsystemBase {
     }
 
     public void extend() {
+        usePIDF = true;
 
     }
 
     public void retract() {
-
+        usePIDF = true;
     }
 
+    /**
+     * Manually extends the intake using the provided power.
+     *
+     * @param power The power level to set for the extension motor.
+     */
     public void manualExtend(double power) {
-        e.setPower(power);
+        if (power > 0.05 || power < -0.05) {
+            usePIDF = false;
+            e.setPower(power);
+        }
+    }
+
+    /**
+     * Checks if the PIDF controller is being used.
+     *
+     * @return true if the PIDF controller is used, false otherwise.
+     */
+    public boolean usePIDF() {
+        return usePIDF;
     }
 }

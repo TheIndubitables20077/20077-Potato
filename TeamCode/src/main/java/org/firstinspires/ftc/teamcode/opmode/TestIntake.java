@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.seattlesolvers.solverslib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.config.core.util.OpModeCommand;
 import org.firstinspires.ftc.teamcode.config.subsystems.Intake;
@@ -31,5 +30,16 @@ public class TestIntake extends OpModeCommand {
             i.stop();
 
         i.manualExtend(gamepad1.right_trigger - gamepad1.left_trigger);
+
+        telemetry.addLine("Intake Controls" +
+                "\n");
+        telemetry.addLine("Press: " +
+                "A to intake " +
+                "B to transfer" +
+                "Y to outtake" +
+                "X to stop" + "\n" +
+                "Use triggers to extend/retract the intake" + "\n");
+        telemetry.addData("Encoder", i.getEncoder());
+        telemetry.update();
     }
 }
