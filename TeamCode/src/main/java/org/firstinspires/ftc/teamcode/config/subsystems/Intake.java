@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.config.subsystems;
 
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -8,11 +9,9 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
-import org.firstinspires.ftc.teamcode.config.core.hardware.CachedMotor;
-
 @Configurable
 public class Intake extends SubsystemBase {
-    private CachedMotor i, e;
+    private DcMotorEx i, e;
     private Servo p;
     private Motor.Encoder en;
     private PIDFController pidf;
@@ -42,9 +41,9 @@ public class Intake extends SubsystemBase {
         CommandScheduler.getInstance().registerSubsystem(this);
 
         // Initialize Hardware Components here
-        i = h.get(CachedMotor.class, "i");
+        i = h.get(DcMotorEx.class, "i");
         p = h.get(Servo.class, "ip");
-        e = h.get(CachedMotor.class, "e");
+        e = h.get(DcMotorEx.class, "e");
         en = h.get(Motor.Encoder.class, "e");
 
         pidf = new PIDFController(kP, kI, kD, kF);
