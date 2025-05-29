@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.config.subsystems;
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -25,6 +26,10 @@ public class Intake extends SubsystemBase {
     public static double mIntake = 1;
     public static double mTransfer = -0.5;
 
+    public static double full = 5200;
+    public static double half = 2600;
+    public static double zero = 0;
+
     public static double kP = 0.01; // Proportional gain for the PIDF controller
     public static double kI = 0;    // Integral gain for the PIDF controller
     public static double kD = 0.0001;    // Derivative gain for the PIDF controller
@@ -43,6 +48,8 @@ public class Intake extends SubsystemBase {
         i = h.get(DcMotorEx.class, "i");
         p = h.get(Servo.class, "ip");
         e = h.get(DcMotorEx.class, "e");
+
+        i.setDirection(DcMotorSimple.Direction.REVERSE);
 
         pidf = new PIDFController(kP, kI, kD, kF);
 
