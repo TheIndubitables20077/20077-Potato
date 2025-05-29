@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDFController;
-import com.seattlesolvers.solverslib.hardware.motors.Motor;
+import com.pedropathing.localization.Encoder;
 
 @Configurable
 public class Intake extends SubsystemBase {
@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
         i = h.get(DcMotorEx.class, "i");
         p = h.get(Servo.class, "ip");
         e = h.get(DcMotorEx.class, "e");
-        en = h.get(Motor.Encoder.class, "e");
+        en = new Encoder(h.get(DcMotorEx.class, "e"));
 
         pidf = new PIDFController(kP, kI, kD, kF);
 
