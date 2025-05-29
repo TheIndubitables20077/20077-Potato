@@ -13,7 +13,7 @@ import com.pedropathing.localization.Encoder;
 public class Intake extends SubsystemBase {
     private DcMotorEx i, e;
     private Servo p;
-    private Motor.Encoder en;
+    private Encoder en;
     private PIDFController pidf;
     private boolean usePIDF = false; // Flag to determine if PIDF control is used
 
@@ -57,7 +57,7 @@ public class Intake extends SubsystemBase {
 
         // Update the PIDF controller with the current encoder value
         if (usePIDF()) {
-            double currentEncoderValue = en.getDistance();
+            double currentEncoderValue = en.getDeltaPosition();
             double output = pidf.calculate(currentEncoderValue);
             e.setPower(output);
         }
@@ -119,7 +119,7 @@ public class Intake extends SubsystemBase {
      * @return The current encoder value of the intake motor.
      */
     public double getEncoder() {
-        return en.getDistance();
+        return en.getDeltaPosition();
     }
 
     public void extend() {
