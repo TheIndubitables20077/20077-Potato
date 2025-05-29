@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode.config.subsystems;
 
+import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 import org.firstinspires.ftc.teamcode.config.core.hardware.CachedMotor;
 
+@Configurable
 public class Intake extends SubsystemBase {
-    private CachedMotor i;
+    private CachedMotor i, e;
     private Servo p;
+    private Motor.Encoder en;
 
     // Position constants for the intake and transfer for the pivot servo
     public static final double pTransfer = 1;
@@ -19,6 +23,8 @@ public class Intake extends SubsystemBase {
     // Power constants for the intake motor
     public static final double mIntake = 1;
     public static final double mTransfer = -0.5;
+
+
 
     /**
      * Constructor for the Intake subsystem.
@@ -32,6 +38,8 @@ public class Intake extends SubsystemBase {
         // Initialize Hardware Components here
         i = h.get(CachedMotor.class, "i");
         p = h.get(Servo.class, "ip");
+        e = h.get(CachedMotor.class, "e");
+        en = h.get(Motor.Encoder.class, "e");
     }
 
     /**
@@ -82,5 +90,26 @@ public class Intake extends SubsystemBase {
     public void stop() {
         setPower(0);
         setPosition(pHover);
+    }
+
+    /**
+     * Returns the encoder value of the intake motor.
+     *
+     * @return The current encoder value of the intake motor.
+     */
+    public double getEncoder() {
+        return en.getDistance();
+    }
+
+    public void extend() {
+
+    }
+
+    public void retract() {
+
+    }
+
+    public void manualExtend(double power) {
+        e.setPower(power);
     }
 }

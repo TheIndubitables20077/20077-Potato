@@ -20,7 +20,6 @@ import org.firstinspires.ftc.teamcode.config.pedro.Constants;
  * @author Anyi Lin - 10158 Scott's Bots
  * @version 1.0, 5/6/2024
  */
-@Configurable
 @TeleOp(group = "Teleop Test", name = "Localization Test")
 public class LocalizationTest extends OpMode {
     public static Follower follower;
