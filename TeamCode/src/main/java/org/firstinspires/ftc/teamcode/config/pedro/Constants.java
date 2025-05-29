@@ -30,6 +30,10 @@ public class Constants {
     public static MecanumConstants driveConstants = new MecanumConstants()
             .xMovement(57.8741)
             .yMovement(52.295)
+            .leftFrontMotorName("lf")
+            .leftRearMotorName("lb")
+            .rightFrontMotorName("rf")
+            .rightRearMotorName("rb")
             .useBrakeModeInTeleOp(true);
 
     public static PinpointConstants pinpointConstants = new PinpointConstants()
