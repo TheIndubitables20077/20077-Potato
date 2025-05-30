@@ -29,7 +29,7 @@ public class OverallTest extends OpModeCommand {
 
     @Override
     public void loop() {
-        f.setTeleOpDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true);
+        f.setTeleOpDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         f.update();
 
         if (gamepad1.a)
