@@ -163,7 +163,7 @@ public class Intake extends SubsystemBase {
      * @param right The power to apply via the right trigger
      */
     public void manual(double left, double right, Telemetry t) {
-        double power = right - left;
+        double power = left - right;
         power /= 3;
 
         if ((power > 0.05 && getPos() >= full) || (power < -0.05 && getPos() <= zero)) {
