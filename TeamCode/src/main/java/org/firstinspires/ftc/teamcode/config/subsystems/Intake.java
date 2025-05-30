@@ -161,14 +161,16 @@ public class Intake extends SubsystemBase {
     public void manual(double left, double right) {
         double power = right - left;
 
-        if (pidLevel == 2 || (power > 0.05 && getPos() >= full) || (power < -0.05 && getPos() <= zero)) {
+        if ((power > 0.05 && getPos() >= full) || (power < -0.05 && getPos() <= zero)) {
             e.setPower(0);
             return;
         }
 
-        if(Math.abs(left) > 0.05 || Math.abs(right) > 0.05) {
+        if(Math.abs(power) > 0.05) {
             pidLevel = 2;
             e.setPower(power);
+        } else if (pidLevel == 2) {
+            e.setPower(0);
         }
     }
 

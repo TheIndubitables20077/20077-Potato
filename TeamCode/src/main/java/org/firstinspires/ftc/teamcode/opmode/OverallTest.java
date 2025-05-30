@@ -18,7 +18,7 @@ public class OverallTest extends OpModeCommand {
     public void initialize() {
         i = new Intake(hardwareMap);
         f = Constants.createFollower(hardwareMap);
-        f.setStartingPose(new Pose());
+        f.setStartingPose(new Pose(0, 0,0));
     }
 
     @Override
