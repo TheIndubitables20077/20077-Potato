@@ -174,7 +174,7 @@ public class Intake extends SubsystemBase {
         if(Math.abs(power) > 0.05) {
             pidLevel = 2;
             e.setPower(power);
-        } else if (pidLevel == 0) {
+        } else if (pidLevel == 2) {
             e.setPower(0);
         }
 
