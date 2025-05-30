@@ -25,8 +25,6 @@ public class Intake extends SubsystemBase {
     public int pidLevel = 0;
     public static int target;
 
-    public Telemetry telemetry;
-
     // Position constants for the intake and transfer for the pivot servo
     public static double pTransfer = 1;
     public static double pIntake = 0;
@@ -178,7 +176,8 @@ public class Intake extends SubsystemBase {
         } else if (pidLevel == 0) {
             e.setPower(0);
         }
-        telemetry.addData("Power: ", power);
+
+        t.addData("Power: ", power);
     }
 
     /**
