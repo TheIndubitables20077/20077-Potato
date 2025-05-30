@@ -164,6 +164,7 @@ public class Intake extends SubsystemBase {
      */
     public void manual(double left, double right, Telemetry t) {
         double power = right - left;
+        power /= 3;
 
         if ((power > 0.05 && getPos() >= full) || (power < -0.05 && getPos() <= zero)) {
             e.setPower(0);
