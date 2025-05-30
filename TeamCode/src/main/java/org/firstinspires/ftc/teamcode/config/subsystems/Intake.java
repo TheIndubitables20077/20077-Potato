@@ -63,6 +63,7 @@ public class Intake extends SubsystemBase {
         pid = new PIDController(kP, kI, kD);
 
         e.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        e.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
