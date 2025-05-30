@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.config.subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,6 +13,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.config.core.hardware.CachedMotor;
 
 @Configurable
@@ -21,6 +24,8 @@ public class Intake extends SubsystemBase {
     public PIDController pid;
     public int pidLevel = 0;
     public static int target;
+
+    public Telemetry telemetry;
 
     // Position constants for the intake and transfer for the pivot servo
     public static double pTransfer = 1;
@@ -158,7 +163,7 @@ public class Intake extends SubsystemBase {
      * @param left The power to apply via the left trigger
      * @param right The power to apply via the right trigger
      */
-    public void manual(double left, double right) {
+    public void manual(double left, double right, Telemetry t) {
         double power = right - left;
 
         if ((power > 0.05 && getPos() >= full) || (power < -0.05 && getPos() <= zero)) {
@@ -169,9 +174,10 @@ public class Intake extends SubsystemBase {
         if(Math.abs(power) > 0.05) {
             pidLevel = 2;
             e.setPower(power);
-        } else if (pidLevel == 2) {
+        } else if (pidLevel == 0) {
             e.setPower(0);
         }
+        telemetry.addData("Power: ", power);
     }
 
     /**
