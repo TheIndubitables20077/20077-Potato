@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.config.core.util.OpModeCommand;
@@ -17,6 +18,7 @@ public class OverallTest extends OpModeCommand {
     public void initialize() {
         i = new Intake(hardwareMap);
         f = Constants.createFollower(hardwareMap);
+        f.setStartingPose(new Pose());
     }
 
     @Override
@@ -36,7 +38,7 @@ public class OverallTest extends OpModeCommand {
         if (gamepad1.x)
             i.stop();
 
-        i.manualExtend(gamepad1.right_trigger - gamepad1.left_trigger);
+        i.manual(gamepad1.right_trigger, gamepad1.left_trigger);
 
         telemetry.addLine("Intake Controls" +
                 "\n");

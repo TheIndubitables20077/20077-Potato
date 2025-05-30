@@ -29,7 +29,7 @@ public class TestIntake extends OpModeCommand {
         if (gamepad1.x)
             i.stop();
 
-        i.manualExtend(gamepad1.right_trigger - gamepad1.left_trigger);
+        i.manual(gamepad1.right_trigger, gamepad1.left_trigger);
 
         telemetry.addLine("Intake Controls" +
                 "\n");

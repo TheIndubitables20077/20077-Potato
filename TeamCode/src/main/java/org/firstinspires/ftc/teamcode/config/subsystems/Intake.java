@@ -8,14 +8,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.controller.PIDFController;
+
+import org.firstinspires.ftc.teamcode.config.core.hardware.CachedMotor;
 
 @Configurable
 public class Intake extends SubsystemBase {
-    private DcMotorEx i, e;
+    private CachedMotor i, e;
     private Servo p;
-    private PIDFController pidf;
-    private boolean usePIDF = false; // Flag to determine if PIDF control is used
+    public int pos;
+    public PIDController pid;
+    public int pidLevel = 0;
+    public static int target;
 
     // Position constants for the intake and transfer for the pivot servo
     public static double pTransfer = 1;
@@ -33,7 +38,6 @@ public class Intake extends SubsystemBase {
     public static double kP = 0.01; // Proportional gain for the PIDF controller
     public static double kI = 0;    // Integral gain for the PIDF controller
     public static double kD = 0.0001;    // Derivative gain for the PIDF controller
-    public static double kF = 0.001;    // Feedforward gain for the PIDF controller
 
     /**
      * Constructor for the Intake subsystem.
@@ -45,19 +49,39 @@ public class Intake extends SubsystemBase {
         CommandScheduler.getInstance().registerSubsystem(this);
 
         // Initialize Hardware Components here
-        i = h.get(DcMotorEx.class, "i");
+        i = new CachedMotor(h.get(DcMotorEx.class, "i"));
         p = h.get(Servo.class, "ip");
-        e = h.get(DcMotorEx.class, "e");
+        e = new CachedMotor(h.get(DcMotorEx.class, "e"));
 
         i.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        pidf = new PIDFController(kP, kI, kD, kF);
+        pid = new PIDController(kP, kI, kD);
 
         e.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
     public void periodic() {
+        if(pidLevel == 1) {
+            pid.setPID(kP, kI, kD);
+
+            e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+            double power = pid.calculate(getPos(), target);
+
+            if (getPos() < 25 && target < 25) {
+                e.setPower(0);
+            } else {
+                e.setPower(power);
+            }
+        } else if (pidLevel == 2){
+            target = getPos();
+            e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        } else {
+            target = getPos();
+            e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            e.setPower(0);
+        }
         super.periodic();
     }
 
@@ -117,7 +141,7 @@ public class Intake extends SubsystemBase {
      * @return The current encoder value of the intake motor.
      */
     public double getEncoder() {
-        return e.getCurrentPosition();
+        return e.getPosition();
     }
 
     public void extend() {
@@ -131,21 +155,37 @@ public class Intake extends SubsystemBase {
     /**
      * Manually extends the intake using the provided power.
      *
-     * @param power The power level to set for the extension motor.
+     * @param left The power to apply via the left trigger
+     * @param right The power to apply via the right trigger
      */
-    public void manualExtend(double power) {
-        if (power > 0.05 || power < -0.05) {
-            usePIDF = false;
+    public void manual(double left, double right) {
+        double power = right - left;
+
+        if (pidLevel == 2 || (power > 0.05 && getPos() >= full) || (power < -0.05 && getPos() <= zero)) {
+            e.setPower(0);
+            return;
+        }
+
+        if(Math.abs(left) > 0.05 || Math.abs(right) > 0.05) {
+            pidLevel = 2;
             e.setPower(power);
         }
     }
 
     /**
-     * Checks if the PIDF controller is being used.
-     *
-     * @return true if the PIDF controller is used, false otherwise.
+     * Sets the target position for the intake extension and activates the PID controller.
+     * @param t The target position to set for the intake extension.
      */
-    public boolean usePIDF() {
-        return usePIDF;
+    public void setTarget(int t) {
+        pidLevel = 1;
+        target = t;
+    }
+
+    /**
+     * Gets the current position of the intake motor's encoder.
+     */
+    public int getPos() {
+        pos = e.getPosition();
+        return e.getPosition();
     }
 }
