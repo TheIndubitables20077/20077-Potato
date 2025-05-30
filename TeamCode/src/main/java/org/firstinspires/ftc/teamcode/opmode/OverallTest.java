@@ -19,6 +19,12 @@ public class OverallTest extends OpModeCommand {
         i = new Intake(hardwareMap);
         f = Constants.createFollower(hardwareMap);
         f.setStartingPose(new Pose(0, 0,0));
+        f.update();
+    }
+
+    @Override
+    public void start() {
+        f.startTeleopDrive();
     }
 
     @Override
