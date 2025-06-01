@@ -18,20 +18,11 @@ public class TestOuttake extends OpModeCommand {
 
     @Override
     public void loop() {
-//        if (gamepad1.a)
-//            o.intake();
-//
-//        if (gamepad1.b)
-//            o.transfer();
-//
-//        if (gamepad1.y)
-//            o.outtake();
-//
-//        if (gamepad1.x)
-//            o.stop();
-//
-//        if (gamepad1.dpad_down)
-//            o.setPosition(Intake.pTransfer);
+        if (gamepad1.a)
+            o.transfer();
+
+        if (gamepad1.b)
+            o.score();
 
         o.manual(gamepad1.right_trigger, gamepad1.left_trigger, telemetry);
 

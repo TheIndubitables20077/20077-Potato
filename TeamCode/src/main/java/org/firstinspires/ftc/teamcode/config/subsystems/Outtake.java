@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.teamcode.config.core.hardware.CachedMotor;
 @Configurable
 public class Outtake extends SubsystemBase {
     private CachedMotor l, r;
-//    private Servo p, t, s;
+    private Servo p, t;//, s;
     public int pos;
     public PIDController pid;
     public int pidLevel = 0;
@@ -28,8 +29,6 @@ public class Outtake extends SubsystemBase {
     // Position constants for the Tilt servo
     public static double tTransfer = 0.5;
     public static double tScore = 0.9;
-
-
 
     public static double high = 5200;
     public static double low = 2600;
@@ -99,6 +98,16 @@ public class Outtake extends SubsystemBase {
     public void setPower(double power) {
         l.setPower(power);
         r.setPower(power);
+    }
+
+    public void transfer() {
+        p.setPosition(pTransfer);
+        t.setPosition(tTransfer);
+    }
+
+    public void score() {
+        p.setPosition(pScore);
+        t.setPosition(tScore);
     }
 
     /**
