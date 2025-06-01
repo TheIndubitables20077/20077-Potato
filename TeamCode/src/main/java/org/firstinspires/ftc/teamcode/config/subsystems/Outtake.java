@@ -23,12 +23,12 @@ public class Outtake extends SubsystemBase {
     public static int target;
 
     // Position constants for the Pivot servo
-    public static double pTransfer = 0;
-    public static double pScore = 0.9;
+    public static double pTransfer = 0.9;
+    public static double pScore = 0.1;
 
     // Position constants for the Tilt servo
-    public static double tTransfer = 0.5;
-    public static double tScore = 0.9;
+    public static double tTransfer = 0.1;
+    public static double tScore = 1;
 
     public static double high = 5200;
     public static double low = 2600;
@@ -50,8 +50,8 @@ public class Outtake extends SubsystemBase {
         // Initialize Hardware Components here
         l = new CachedMotor(h.get(DcMotorEx.class, "l"));
         r = new CachedMotor(h.get(DcMotorEx.class, "r"));
-//        p = h.get(Servo.class, "op");
-//        t = h.get(Servo.class, "t");
+        p = h.get(Servo.class, "op");
+        t = h.get(Servo.class, "t");
 //        s = h.get(Servo.class, "s");
         
         r.setDirection(DcMotorSimple.Direction.REVERSE);
