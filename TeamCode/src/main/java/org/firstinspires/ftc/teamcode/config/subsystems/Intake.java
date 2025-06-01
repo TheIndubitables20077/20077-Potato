@@ -26,9 +26,9 @@ public class Intake extends SubsystemBase {
     public static int target;
 
     // Position constants for the intake and transfer for the pivot servo
-    public static double pTransfer = 1;
-    public static double pIntake = 0;
-    public static double pHover = 0.5;
+    public static double pTransfer = 0;
+    public static double pIntake = 0.95;
+    public static double pHover = 0.7;
 
     // Power constants for the intake motor
     public static double mIntake = 1;
@@ -137,23 +137,6 @@ public class Intake extends SubsystemBase {
     public void stop() {
         setPower(0);
         setPosition(pHover);
-    }
-
-    /**
-     * Returns the encoder value of the intake motor.
-     *
-     * @return The current encoder value of the intake motor.
-     */
-    public double getEncoder() {
-        return e.getPosition();
-    }
-
-    public void extend() {
-//        usePIDF = true;
-    }
-
-    public void retract() {
-//        usePIDF = true;
     }
 
     /**

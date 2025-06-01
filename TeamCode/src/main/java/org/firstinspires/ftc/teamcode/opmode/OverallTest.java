@@ -54,7 +54,7 @@ public class OverallTest extends OpModeCommand {
                 "Y to outtake" +
                 "X to stop" + "\n" +
                 "Use triggers to extend/retract the intake" + "\n");
-        telemetry.addData("Encoder", i.getEncoder());
+        telemetry.addData("Encoder", i.getPos());
         telemetry.update();
     }
 }
