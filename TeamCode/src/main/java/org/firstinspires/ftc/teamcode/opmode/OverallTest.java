@@ -64,5 +64,8 @@ public class OverallTest extends OpModeCommand {
         i.manual(gamepad1.right_trigger, gamepad1.left_trigger, telemetry);
 
         telemetry.update();
+
+        o.periodic();
+        i.periodic();
     }
 }

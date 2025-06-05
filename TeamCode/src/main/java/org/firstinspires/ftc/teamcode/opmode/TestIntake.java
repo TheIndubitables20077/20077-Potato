@@ -46,5 +46,7 @@ public class TestIntake extends OpModeCommand {
         telemetry.addData("Gamepad1 Left Trigger", gamepad1.left_trigger);
         telemetry.addData("Gamepad1 Right Trigger", gamepad1.right_trigger);
         telemetry.update();
+
+        i.periodic();
     }
 }
