@@ -57,6 +57,7 @@ public class Intake extends SubsystemBase {
         e = new CachedMotor(h.get(DcMotorEx.class, "e"));
 
         i.setDirection(DcMotorSimple.Direction.REVERSE);
+        e.setDirection(DcMotorSimple.Direction.REVERSE);
 
         pid = new PIDController(kP, kI, kD);
 
@@ -177,7 +178,7 @@ public class Intake extends SubsystemBase {
      * Gets the current position of the intake motor's encoder.
      */
     public int getPos() {
-        pos = e.getPosition();
-        return e.getPosition();
+        pos = -e.getPosition();
+        return -e.getPosition();
     }
 }

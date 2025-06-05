@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.config.core.hardware.CachedMotor;
 @Configurable
 public class Outtake extends SubsystemBase {
     private CachedMotor l, r;
-    private Servo p, t;//, s;
+    private Servo p, t, s;
     public int pos;
     public PIDController pid;
     public int pidLevel = 0;
@@ -27,12 +27,16 @@ public class Outtake extends SubsystemBase {
     public static double pScore = 0.1;
 
     // Position constants for the Tilt servo
-    public static double tTransfer = 0.1;
-    public static double tScore = 1;
+    public static double tTransfer = 0.2;
+    public static double tScore = 0.85;
 
-    public static double high = 5200;
-    public static double low = 2600;
-    public static double zero = 0;
+    // Position constants for the Switch servo
+    public static double sOpen = 0;
+    public static double sClosed = 0.5;
+
+    public static int high = 828;
+    public static int low = 414;
+    public static int zero = 0;
 
     public static double kP = 0.01; // Proportional gain for the PIDF controller
     public static double kI = 0;    // Integral gain for the PIDF controller
@@ -52,9 +56,9 @@ public class Outtake extends SubsystemBase {
         r = new CachedMotor(h.get(DcMotorEx.class, "r"));
         p = h.get(Servo.class, "op");
         t = h.get(Servo.class, "t");
-//        s = h.get(Servo.class, "s");
+        s = h.get(Servo.class, "s");
         
-        r.setDirection(DcMotorSimple.Direction.REVERSE);
+        l.setDirection(DcMotorSimple.Direction.REVERSE);
 
         pid = new PIDController(kP, kI, kD);
 
@@ -87,7 +91,6 @@ public class Outtake extends SubsystemBase {
             r.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             setPower(0);
         }
-        super.periodic();
     }
 
     /**
@@ -109,6 +112,9 @@ public class Outtake extends SubsystemBase {
         p.setPosition(pScore);
         t.setPosition(tScore);
     }
+
+    public void open() { s.setPosition(sOpen); }
+    public void close() { s.setPosition(sClosed); }
 
     /**
      * Manually extends the Outtake using the provided power.
@@ -148,7 +154,7 @@ public class Outtake extends SubsystemBase {
      * Gets the current position of the Outtake motor's encoder.
      */
     public int getPos() {
-        pos = l.getPosition();
-        return l.getPosition();
+        pos = -l.getPosition();
+        return -l.getPosition();
     }
 }

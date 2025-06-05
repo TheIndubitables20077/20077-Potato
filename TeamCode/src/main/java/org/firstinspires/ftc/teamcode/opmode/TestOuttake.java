@@ -24,15 +24,18 @@ public class TestOuttake extends OpModeCommand {
         if (gamepad1.b)
             o.score();
 
+        if (gamepad1.left_bumper)
+            o.open();
+
+        if (gamepad1.right_bumper)
+            o.close();
+
         o.manual(gamepad1.right_trigger, gamepad1.left_trigger, telemetry);
 
-        telemetry.addLine("Intake Controls" +
+        telemetry.addLine("Outtake Controls" +
                 "\n");
         telemetry.addLine("Press: " +
-                "A to intake " +
-                "B to transfer" +
-                "Y to outtake" +
-                "X to stop" + "\n" +
+                 "\n" +
                 "Use triggers to extend/retract the intake" + "\n");
         telemetry.addData("Encoder", o.getPos());
         telemetry.addData("Gamepad1 Left Trigger", gamepad1.left_trigger);
