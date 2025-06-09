@@ -27,7 +27,7 @@ public class Outtake extends SubsystemBase {
     public static double pScore = 0.1;
 
     // Position constants for the Tilt servo
-    public static double tTransfer = 0.2;
+    public static double tTransfer = 0.15;
     public static double tScore = 0.85;
 
     // Position constants for the Switch servo

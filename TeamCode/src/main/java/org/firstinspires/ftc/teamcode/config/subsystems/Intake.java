@@ -18,6 +18,13 @@ import org.firstinspires.ftc.teamcode.config.core.hardware.CachedMotor;
 
 @Configurable
 public class Intake extends SubsystemBase {
+    public enum IntakeState {
+        OFF, ON, REVERSE
+    }
+
+    public enum PivotState {
+        TRANSFER, HOVER, INTAKE
+    }
     private CachedMotor i, e;
     private Servo p;
     public int pos;
@@ -26,9 +33,11 @@ public class Intake extends SubsystemBase {
     public static int target;
 
     // Position constants for the intake and transfer for the pivot servo
-    public static double pTransfer = 0;
+    public static double pTransfer = 0.425;
     public static double pIntake = 0.95;
     public static double pHover = 0.7;
+    public static IntakeState istate;
+    public static PivotState pstate;
 
     // Power constants for the intake motor
     public static double mIntake = 1;
@@ -41,6 +50,7 @@ public class Intake extends SubsystemBase {
     public static double kP = 0.01; // Proportional gain for the PIDF controller
     public static double kI = 0;    // Integral gain for the PIDF controller
     public static double kD = 0.0001;    // Derivative gain for the PIDF controller
+    public static double kF = 0.01;
 
     /**
      * Constructor for the Intake subsystem.
@@ -56,7 +66,6 @@ public class Intake extends SubsystemBase {
         p = h.get(Servo.class, "ip");
         e = new CachedMotor(h.get(DcMotorEx.class, "e"));
 
-        i.setDirection(DcMotorSimple.Direction.REVERSE);
         e.setDirection(DcMotorSimple.Direction.REVERSE);
 
         pid = new PIDController(kP, kI, kD);
@@ -72,7 +81,7 @@ public class Intake extends SubsystemBase {
 
             e.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-            double power = pid.calculate(getPos(), target);
+            double power = pid.calculate(getPos(), target) + kF;
 
             if (getPos() < 25 && target < 25) {
                 e.setPower(0);
@@ -112,33 +121,79 @@ public class Intake extends SubsystemBase {
      * Sets the intake motor to intake mode and positions the servo accordingly.
      */
     public void intake() {
-        setPower(mIntake);
-        setPosition(pIntake);
+        switchI(IntakeState.ON);
+        switchP(PivotState.INTAKE);
     }
 
-    /**
-     * Sets the intake motor to transfer mode and positions the servo accordingly.
-     */
+    public void stop() {
+        switchI(IntakeState.OFF);
+        switchP(PivotState.HOVER);
+    }
+
     public void transfer() {
-        setPower(mTransfer);
-        setPosition(pTransfer);
+        switchI(IntakeState.REVERSE);
+        switchP(PivotState.TRANSFER);
+    }
+
+    public void switchPivotIntake() {
+        if (pstate == PivotState.INTAKE) {
+            switchP(PivotState.HOVER);
+            switchI(IntakeState.OFF);
+        } else if (pstate == PivotState.HOVER) {
+            switchP(PivotState.INTAKE);
+            switchI(IntakeState.ON);
+        }
+    }
+
+    public void switchPivotTransfer() {
+        if (pstate == PivotState.TRANSFER) {
+            switchP(PivotState.HOVER);
+            switchI(IntakeState.OFF);
+        } else if (pstate == PivotState.HOVER) {
+            switchP(PivotState.TRANSFER);
+            switchI(IntakeState.OFF);
+        }
     }
 
     /**
      * Sets the intake motor to outtake mode and positions the servo accordingly.
      */
     public void outtake() {
-        setPower(-mIntake);
-        setPosition(pIntake);
+        switchI(IntakeState.REVERSE);
     }
+
+    public void switchI(IntakeState state) {
+        if (state == istate.ON) {
+            i.setPower(1);
+            this.istate = IntakeState.ON;
+        } else if(state == istate.OFF) {
+            i.setPower(0);
+            this.istate = istate.OFF;
+        } else if (state == IntakeState.REVERSE) {
+            i.setPower(-1);
+            this.istate = IntakeState.REVERSE;
+        }
+    }
+
+    public void switchP(PivotState state) {
+        if (state == pstate.INTAKE) {
+            p.setPosition(pIntake);
+            switchI(IntakeState.ON);
+            this.pstate = PivotState.INTAKE;
+        } else if(state == pstate.HOVER) {
+            p.setPosition(pHover);
+            switchI(IntakeState.OFF);
+            this.pstate = PivotState.HOVER;
+        } else if (state == PivotState.TRANSFER) {
+            p.setPosition(pTransfer);
+            this.pstate = PivotState.TRANSFER;
+        }
+    }
+
 
     /**
      * Stops the intake motor and sets the servo to hover position.
      */
-    public void stop() {
-        setPower(0);
-        setPosition(pHover);
-    }
 
     /**
      * Manually extends the intake using the provided power.
